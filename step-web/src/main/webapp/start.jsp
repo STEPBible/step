@@ -363,7 +363,7 @@
             %>
                                         <!-- <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link" /></a></li> -->
                                         <li class="extrapad-other"><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help" /></a></li>
-                                        <li><a href="https://stepbibleguide.blogspot.com" target="_blank"><fmt:message key="help_online" /></a></li>
+                                        <li><a href="J_Apps/J_UserGuide/application.html" target="_blank"><fmt:message key="help_online" /></a></li>
             <%
                 if (appManager.isLocal()) {
             %> 
@@ -379,7 +379,7 @@
             %>
                                         <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui" />&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
                                         <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile" /></a></li>
-                                        <li><a href="https://stepbibleguide.blogspot.com/p/volunteers.html" target="_blank"><fmt:message key="we_need_help" /></a></li>
+                                        <li><a href="J_Apps/J_UserGuide/application.html?page=volunteers" target="_blank"><fmt:message key="we_need_help" /></a></li>
             <%
                 if (!appManager.isLocal()) {
             %> 
@@ -388,7 +388,7 @@
             <%
                 }
             %>
-                                        <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link" /></a></li>
+                                        <li><a target="_new" href="J_Apps/J_UserGuide/application.html?page=copyrights-licences" name="COPYRIGHT"><fmt:message key="copyright_info_link" /></a></li>
                                         <li class="aboutModalTrigger"><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
             <%
                 if (appManager.isLocal()) {

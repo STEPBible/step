@@ -197,11 +197,13 @@
   display: inline-block;
   line-height: 1.2;
   font-size: 85%;
-
-  &:after {
-    content: "";
-    margin-right: 5px;
-  }
+  // looks like an outline (empty) button; purely visual
+  margin-right: 5px; // was an :after spacer, which would sit inside the border
+  padding: 0 4px;
+  border: 1px solid #d3d3d3; // for IE
+  border: 1px solid var(--clr2ndHover);
+  border-radius: 4px;
+  background: transparent;
 }
 
 h3.canonicalHeading {

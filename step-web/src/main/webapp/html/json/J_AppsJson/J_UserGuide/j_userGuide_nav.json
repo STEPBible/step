@@ -1,0 +1,443 @@
+{
+ "generated": "2026-11-07",
+ "source": "https://stepbibleguide.blogspot.com",
+ "home": "home_19",
+ "nav": [
+  {
+   "id": "home_19",
+   "title": "Contents"
+  },
+  {
+   "id": "getting-started",
+   "title": "Getting Started",
+   "children": [
+    {
+     "id": "overview",
+     "title": "Quick Overview"
+    },
+    {
+     "id": "videos",
+     "title": "Video Guides"
+    },
+    {
+     "id": "stepbible-interface",
+     "title": "The STEPBible Interface"
+    },
+    {
+     "id": "language",
+     "title": "Setting your Language"
+    },
+    {
+     "id": "download",
+     "title": "Download for Offline Use"
+    }
+   ]
+  },
+  {
+   "id": "features",
+   "title": "Exploring Facilities",
+   "children": [
+    {
+     "id": "opening",
+     "title": "Opening Bibles & Commentaries"
+    },
+    {
+     "id": "display",
+     "title": "Display Options"
+    },
+    {
+     "id": "panels_24",
+     "title": "Opening & Saving Panels"
+    },
+    {
+     "id": "finding-words-and-subjects",
+     "title": "Finding Words and Subjects"
+    },
+    {
+     "id": "advanced-search",
+     "title": "Using Advanced Search",
+     "children": [
+      {
+       "id": "introduction-to-stepbibleorg",
+       "title": "Introduction to STEPBible.org"
+      }
+     ]
+    },
+    {
+     "id": "tools",
+     "title": "Original Language Tools"
+    },
+    {
+     "id": "notes-and-references",
+     "title": "Notes and References"
+    },
+    {
+     "id": "personal",
+     "title": "Personal Setup"
+    },
+    {
+     "id": "finding",
+     "title": "Finding Words, Verses and Subjects"
+    }
+   ]
+  },
+  {
+   "id": "resources",
+   "title": "Study Resources",
+   "children": [
+    {
+     "id": "bible-versions",
+     "title": "Bible Versions"
+    },
+    {
+     "id": "comm",
+     "title": "Commentaries"
+    },
+    {
+     "id": "dictionaries",
+     "title": "Dictionaries"
+    },
+    {
+     "id": "grammar",
+     "title": "Grammatical Meanings"
+    },
+    {
+     "id": "variants",
+     "title": "Variants and Apparatus"
+    },
+    {
+     "id": "manuscripts",
+     "title": "Manuscripts and Meanings",
+     "children": [
+      {
+       "id": "more-about-meanings",
+       "title": "More about Meanings"
+      }
+     ]
+    },
+    {
+     "id": "webmaster",
+     "title": "Links & Webmaster Tools"
+    }
+   ]
+  },
+  {
+   "id": "study",
+   "title": "Study",
+   "children": [
+    {
+     "id": "bible-manuscripts",
+     "title": "Bible manuscripts",
+     "children": [
+      {
+       "id": "nt-manuscripts",
+       "title": "NT Manuscripts"
+      },
+      {
+       "id": "ot-manuscripts",
+       "title": "OT Manuscripts"
+      },
+      {
+       "id": "ot-editions",
+       "title": "OT Editions"
+      },
+      {
+       "id": "ot-variants",
+       "title": "OT Variants"
+      },
+      {
+       "id": "ot-scribal-editing",
+       "title": "OT Scribal editing",
+       "children": [
+        {
+         "id": "more-about-ot-ketiv-qere",
+         "title": "More about OT Ketiv-Qere"
+        },
+        {
+         "id": "more-about-ot-scribal-editing",
+         "title": "More About OT Scribal Editing"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "bible-study-techniques",
+     "title": "Bible Study Techniques"
+    },
+    {
+     "id": "bible-study-notes-by-contributors",
+     "title": "Bible Study Notes by Contributors"
+    }
+   ]
+  },
+  {
+   "id": "about",
+   "title": "About STEPBible",
+   "children": [
+    {
+     "id": "who-makes-stepbible",
+     "title": "Who makes STEPBible"
+    },
+    {
+     "id": "copyrights-licences",
+     "title": "Copyrights & Licences"
+    },
+    {
+     "id": "user-quotes-and-ideas",
+     "title": "User quotes and ideas"
+    },
+    {
+     "id": "faqs",
+     "title": "Questions & Feedback"
+    },
+    {
+     "id": "volunteers",
+     "title": "Volunteering & Testing"
+    },
+    {
+     "id": "stepbible-interface-language",
+     "title": "Interface Language Corrections",
+     "children": [
+      {
+       "id": "using-crowdin",
+       "title": "Using Crowdin"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "pages": {
+  "getting-started": {
+   "title": "Getting Started",
+   "updated": "2023-02-02",
+   "source": "https://stepbibleguide.blogspot.com/p/getting-started.html"
+  },
+  "features": {
+   "title": "Exploring Facilities",
+   "updated": "2020-03-19",
+   "source": "https://stepbibleguide.blogspot.com/p/features.html"
+  },
+  "resources": {
+   "title": "Study Resources",
+   "updated": "2020-05-20",
+   "source": "https://stepbibleguide.blogspot.com/p/resources.html"
+  },
+  "study": {
+   "title": "Study",
+   "updated": "2020-05-25",
+   "source": "https://stepbibleguide.blogspot.com/p/study.html"
+  },
+  "about": {
+   "title": "About STEPBible",
+   "updated": "2023-02-10",
+   "source": "https://stepbibleguide.blogspot.com/p/about.html"
+  },
+  "overview": {
+   "title": "Quick Overview",
+   "updated": "2023-02-02",
+   "source": "https://stepbibleguide.blogspot.com/p/overview.html"
+  },
+  "videos": {
+   "title": "Video Guides",
+   "updated": "2020-10-09",
+   "source": "https://stepbibleguide.blogspot.com/p/videos.html"
+  },
+  "stepbible-interface": {
+   "title": "The STEPBible Interface",
+   "updated": "2023-02-03",
+   "source": "https://stepbibleguide.blogspot.com/p/stepbible-interface.html"
+  },
+  "language": {
+   "title": "Setting your Language",
+   "updated": "2022-04-03",
+   "source": "https://stepbibleguide.blogspot.com/p/language.html"
+  },
+  "download": {
+   "title": "Download for Offline Use",
+   "updated": "2022-02-10",
+   "source": "https://stepbibleguide.blogspot.com/p/download.html"
+  },
+  "opening": {
+   "title": "Opening Bibles & Commentaries",
+   "updated": "2022-09-13",
+   "source": "https://stepbibleguide.blogspot.com/p/opening.html"
+  },
+  "display": {
+   "title": "Display Options",
+   "updated": "2022-09-13",
+   "source": "https://stepbibleguide.blogspot.com/p/display.html"
+  },
+  "panels_24": {
+   "title": "Opening & Saving Panels",
+   "updated": "2020-03-02",
+   "source": "https://stepbibleguide.blogspot.com/p/panels_24.html"
+  },
+  "finding-words-and-subjects": {
+   "title": "Finding Words and Subjects",
+   "updated": "2022-04-03",
+   "source": "https://stepbibleguide.blogspot.com/p/finding-words-and-subjects.html"
+  },
+  "advanced-search": {
+   "title": "Using Advanced Search",
+   "updated": "2025-01-15",
+   "source": "https://stepbibleguide.blogspot.com/p/advanced-search.html"
+  },
+  "tools": {
+   "title": "Original Language Tools",
+   "updated": "2022-02-21",
+   "source": "https://stepbibleguide.blogspot.com/p/tools.html"
+  },
+  "notes-and-references": {
+   "title": "Notes and References",
+   "updated": "2021-02-15",
+   "source": "https://stepbibleguide.blogspot.com/p/notes-and-references.html"
+  },
+  "personal": {
+   "title": "Personal Setup",
+   "updated": "2020-03-19",
+   "source": "https://stepbibleguide.blogspot.com/p/personal.html"
+  },
+  "bible-versions": {
+   "title": "Bible Versions",
+   "updated": "2020-03-19",
+   "source": "https://stepbibleguide.blogspot.com/p/bible-versions.html"
+  },
+  "comm": {
+   "title": "Commentaries",
+   "updated": "2020-03-21",
+   "source": "https://stepbibleguide.blogspot.com/p/comm.html"
+  },
+  "dictionaries": {
+   "title": "Dictionaries",
+   "updated": "2022-03-17",
+   "source": "https://stepbibleguide.blogspot.com/p/dictionaries.html"
+  },
+  "grammar": {
+   "title": "Grammatical Meanings",
+   "updated": "2020-05-06",
+   "source": "https://stepbibleguide.blogspot.com/p/grammar.html"
+  },
+  "variants": {
+   "title": "Variants and Apparatus",
+   "updated": "2022-08-10",
+   "source": "https://stepbibleguide.blogspot.com/p/variants.html"
+  },
+  "manuscripts": {
+   "title": "Manuscripts and Meanings",
+   "updated": "2023-03-11",
+   "source": "https://stepbibleguide.blogspot.com/p/manuscripts.html"
+  },
+  "webmaster": {
+   "title": "Links & Webmaster Tools",
+   "updated": "2021-10-07",
+   "source": "https://stepbibleguide.blogspot.com/p/webmaster.html"
+  },
+  "bible-manuscripts": {
+   "title": "Bible manuscripts",
+   "updated": "2023-08-21",
+   "source": "https://stepbibleguide.blogspot.com/p/bible-manuscripts.html"
+  },
+  "bible-study-techniques": {
+   "title": "Bible Study Techniques",
+   "updated": "2020-05-25",
+   "source": "https://stepbibleguide.blogspot.com/p/bible-study-techniques.html"
+  },
+  "bible-study-notes-by-contributors": {
+   "title": "Bible Study Notes by Contributors",
+   "updated": "2020-05-25",
+   "source": "https://stepbibleguide.blogspot.com/p/bible-study-notes-by-contributors.html"
+  },
+  "who-makes-stepbible": {
+   "title": "Who makes STEPBible",
+   "updated": "2023-01-12",
+   "source": "https://stepbibleguide.blogspot.com/p/who-makes-stepbible.html"
+  },
+  "copyrights-licences": {
+   "title": "Copyrights & Licences",
+   "updated": "2026-10-09",
+   "source": "https://stepbibleguide.blogspot.com/p/copyrights-licences.html"
+  },
+  "user-quotes-and-ideas": {
+   "title": "User quotes and ideas",
+   "updated": "2020-05-23",
+   "source": "https://stepbibleguide.blogspot.com/p/user-quotes-and-ideas.html"
+  },
+  "faqs": {
+   "title": "Questions & Feedback",
+   "updated": "2023-02-10",
+   "source": "https://stepbibleguide.blogspot.com/p/faqs.html"
+  },
+  "volunteers": {
+   "title": "Volunteering & Testing",
+   "updated": "2021-08-29",
+   "source": "https://stepbibleguide.blogspot.com/p/volunteers.html"
+  },
+  "stepbible-interface-language": {
+   "title": "Interface Language Corrections",
+   "updated": "2020-07-21",
+   "source": "https://stepbibleguide.blogspot.com/p/stepbible-interface-language.html"
+  },
+  "using-crowdin": {
+   "title": "Using Crowdin",
+   "updated": "2020-07-17",
+   "source": "https://stepbibleguide.blogspot.com/p/using-crowdin.html"
+  },
+  "finding": {
+   "title": "Finding Words, Verses and Subjects",
+   "updated": "2020-03-19",
+   "source": "https://stepbibleguide.blogspot.com/p/finding.html"
+  },
+  "nt-manuscripts": {
+   "title": "NT Manuscripts",
+   "updated": "2020-05-24",
+   "source": "https://stepbibleguide.blogspot.com/p/nt-manuscripts.html"
+  },
+  "ot-manuscripts": {
+   "title": "OT Manuscripts",
+   "updated": "2020-05-24",
+   "source": "https://stepbibleguide.blogspot.com/p/ot-manuscripts.html"
+  },
+  "ot-editions": {
+   "title": "OT Editions",
+   "updated": "2020-05-24",
+   "source": "https://stepbibleguide.blogspot.com/p/ot-editions.html"
+  },
+  "ot-variants": {
+   "title": "OT Variants",
+   "updated": "2020-05-24",
+   "source": "https://stepbibleguide.blogspot.com/p/ot-variants.html"
+  },
+  "ot-scribal-editing": {
+   "title": "OT Scribal editing",
+   "updated": "2020-05-24",
+   "source": "https://stepbibleguide.blogspot.com/p/ot-scribal-editing.html"
+  },
+  "introduction-to-stepbibleorg": {
+   "title": "Introduction to STEPBible.org",
+   "updated": "2021-02-26",
+   "source": "https://stepbibleguide.blogspot.com/p/introduction-to-stepbibleorg.html"
+  },
+  "more-about-meanings": {
+   "title": "More about Meanings",
+   "updated": "2021-09-21",
+   "source": "https://stepbibleguide.blogspot.com/p/more-about-meanings.html"
+  },
+  "more-about-ot-ketiv-qere": {
+   "title": "More about OT Ketiv-Qere",
+   "updated": "2023-07-31",
+   "source": "https://stepbibleguide.blogspot.com/p/more-about-ot-ketiv-qere.html"
+  },
+  "more-about-ot-scribal-editing": {
+   "title": "More About OT Scribal Editing",
+   "updated": "2026-03-21",
+   "source": "https://stepbibleguide.blogspot.com/p/more-about-ot-scribal-editing.html"
+  },
+  "home_19": {
+   "title": "Contents",
+   "updated": "2022-04-04",
+   "source": "https://stepbibleguide.blogspot.com/p/home_19.html"
+  }
+ }
+}

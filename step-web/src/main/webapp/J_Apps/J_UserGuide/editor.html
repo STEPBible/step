@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!-- ================================================================================
+     STEPBible User Guide -- visual page editor.
+
+     Drag blocks (heading, text, image, Bible passage, note ...) onto the page,
+     edit them in place, and Save: the page is written as
+     html/json/J_AppsJson/J_UserGuide/pages/<id>.html in the local git checkout
+     chosen by the user (File System Access API: Edge / Chrome, works offline).
+     Then commit with git as usual.
+
+     Code:   j_userGuideEditor.js (+ j_userGuideBlocks.js, j_userGuideRepo.js,
+             j_userGuideSanitize.js, j_userGuideSettings.js)
+     Styles: j_userGuide.css (page content, as in the viewer)
+             j_userGuideEditor.css (editor)
+             J_Lib's j_common.css (STEPBible colour variables), added by the code
+     ================================================================================ -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Guide Editor - STEPBible</title>
+  <link rel="shortcut icon" href="/images/step-favicon.ico"/>
+
+  <link href="j_userGuide.css" rel="stylesheet" media="screen"/>
+  <link href="j_userGuideEditor.css" rel="stylesheet" media="screen"/>
+</head>
+
+
+<body class="jUGe" style="visibility: hidden"> <!-- Shown once the stylesheets have loaded. -->
+  <!-- ======================== Top bar ======================== -->
+  <header class="jUGe-top">
+    <span class="jUGe-brand">STEP<span class="jUGe-brandSub" data-t="editorTitle"></span></span>
+
+    <button type="button" class="jUGe-pageButton" id="jUGe-pageButton" data-t-title="openPage">
+      <span class="jUGe-pageButtonIcon">&#x1F4C4;</span><span id="jUGe-pageName">&hellip;</span><span class="jUGe-caret">&#x25BE;</span>
+    </button>
+    <span class="jUGe-status" id="jUGe-status" aria-live="polite"></span>
+
+    <span class="jUGe-spacer"></span>
+
+    <button type="button" class="jUGe-iconBtn" id="jUGe-undo" data-t-title="undo" disabled>&#x21B6;</button>
+    <button type="button" class="jUGe-iconBtn" id="jUGe-redo" data-t-title="redo" disabled>&#x21B7;</button>
+    <span class="jUGe-sep"></span>
+    <button type="button" class="jUGe-iconBtn" id="jUGe-device" data-t-title="mobileView">&#x1F4F1;</button>
+    <button type="button" class="jUGe-iconBtn" id="jUGe-preview" data-t-title="preview">&#x1F441;</button>
+    <button type="button" class="jUGe-iconBtn" id="jUGe-help" data-t-title="help">?</button>
+    <span class="jUGe-sep"></span>
+    <button type="button" class="jUGe-save" id="jUGe-save"><span data-t="save"></span></button>
+  </header>
+
+
+  <div class="jUGe-body">
+    <!-- ======================== Side panel ======================== -->
+    <aside class="jUGe-panel" id="jUGe-panel">
+      <div class="jUGe-tabs" role="tablist">
+        <button type="button" role="tab" class="jUGe-tab" data-tab="blocks" data-t="tabBlocks"></button>
+        <button type="button" role="tab" class="jUGe-tab" data-tab="page" data-t="tabPage"></button>
+      </div>
+
+      <div class="jUGe-panelBody" id="jUGe-panelBlocks">
+        <p class="jUGe-panelHint" data-t="blocksHint"></p>
+        <div class="jUGe-palette" id="jUGe-palette"></div>
+      </div>
+
+      <div class="jUGe-panelBody" id="jUGe-panelPage" hidden></div>
+
+      <div class="jUGe-panelBody" id="jUGe-panelBlock" hidden></div>
+
+      <div class="jUGe-folder" id="jUGe-folder"></div>
+    </aside>
+
+
+    <!-- ======================== Canvas ======================== -->
+    <main class="jUGe-canvas" id="jUGe-canvas">
+      <div class="jUGe-format" id="jUGe-format" hidden>
+        <button type="button" data-cmd="bold" data-t-title="bold"><b>B</b></button>
+        <button type="button" data-cmd="italic" data-t-title="italic"><i>I</i></button>
+        <button type="button" data-cmd="underline" data-t-title="underline"><u>U</u></button>
+        <span class="jUGe-sep"></span>
+        <button type="button" data-cmd="link" data-t-title="link">&#x1F517;</button>
+        <button type="button" data-cmd="insertUnorderedList" data-t-title="bullets">&#x2022;&#x2261;</button>
+        <button type="button" data-cmd="insertOrderedList" data-t-title="numbers">1.&#x2261;</button>
+        <span class="jUGe-sep"></span>
+        <button type="button" data-cmd="removeFormat" data-t-title="clearFormat">T&#x0338;</button>
+      </div>
+
+      <div class="jUGe-sheet" id="jUGe-sheet">
+        <input class="jUGe-titleInput jUG-appPageTitle" id="jUGe-title" autocomplete="off" data-t-placeholder="titlePlaceholder">
+        <div class="jUG-content jUGe-blocks" id="jUGe-blocks"></div>
+        <div class="jUGe-addZone" id="jUGe-addZone" data-t="addZone"></div>
+      </div>
+    </main>
+  </div>
+
+
+  <!-- ======================== Dialog (reused for every modal) ======================== -->
+  <dialog class="jUGe-dialog" id="jUGe-dialog">
+    <form method="dialog" id="jUGe-dialogForm">
+      <h2 id="jUGe-dialogTitle"></h2>
+      <div id="jUGe-dialogBody"></div>
+      <div class="jUGe-dialogButtons" id="jUGe-dialogButtons"></div>
+    </form>
+  </dialog>
+
+  <input type="file" id="jUGe-file" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+  <div class="jUGe-toast" id="jUGe-toast" role="status"></div>
+
+
+  <script type="module">
+    import { JUserGuideEditor } from './j_userGuideEditor.js';
+    JUserGuideEditor.init();
+  </script>
+</body>
+</html>

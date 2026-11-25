@@ -320,7 +320,9 @@ var PassageDisplayView = DisplayView.extend({
 
             var currentTarget = this.model.get("targetLocation");
             if (currentTarget) {
-                var link = passageContainer.find("[name='" + currentTarget + "']");
+                // a multi-verse ref arrives as a space-separated list ("Job.38.4 Job.38.5 ..."): scroll to the first, underline all
+                var verseIds = $.trim(currentTarget).split(/\s+/);
+                var link = passageContainer.find(_.map(verseIds, function (id) { return "[name='" + id + "']"; }).join(","));
                 var linkOffset = link.offset();
                 var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop() - passageContainer.offset().top;
                 scroll -= 200;

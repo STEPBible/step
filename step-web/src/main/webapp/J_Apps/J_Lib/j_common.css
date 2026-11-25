@@ -1,0 +1,268 @@
+/******************************************************************************/
+/* Common definitions.
+
+   This is probably the yuckiest part of the system ...
+
+   To begin with, I don't know if there is an official file setting out things
+   like colours.  Unless I'm confabulating, there _seemed_ to be more than one.
+   Possibly, if there are, they are all identical, but I haven't checked.
+
+   Anyway, confronted with a situation in which we already seemed to have too
+   many copies of the data, I did the obvious thing, and created another one
+   (created another one by copying from one of the existing ones).  This
+   accounts for the colours at the top of the file.  Or more specifically,
+   it accounts for the left hand column of colours.  I'll return to the
+   right-hand column in a moment.
+
+   I then needed to decide which of the various built-in colours to use for
+   the various elements of the 4-panel applications, not all of which had
+   any obvious analogues in the existing bits of STEPBible.  The idea,
+   therefore, was to associate the classes I use in the application with
+   the colours available from the supposed central repository.
+
+   I wasn't exactly sure whether we had an official way of handling user-
+   definable colours, but it kind of felt that at least if I was defining
+   everything in terms of existing 'official' colours, it might be easier
+   to respond to whatever mechanism we choose for light mode / dark mode /
+   user-defined  settings in due course, even if we couldn't do so now.
+
+   There is now a further complication, in that I thought it might be
+   vaguely interesting to enlist Claude's help to see if there is in fact
+   a good officially-recognised way to handle things like light mode and
+   dark mode.  Turns out there is, and this accounts for the first three
+   :root definitions below, and for the two-column format for colour
+   definitions.
+
+   Along with the setColour method in j_utils.js, this lets you choose
+   between light mode, dark mode and auto mode (auto mode ostensibly
+   being something which follows the settings in your browser, I think).
+
+   I couldn't be bothered to come up with a dark palette for myself, so I
+   let Claude do that for me.  Unfortunately its choices are not entirely
+   felicitous, so if we ever wanted to handle dark mode, we'd have to
+   sort out the palette (or else would need to rely upon any existing
+   mechanism within STEPBible, which I have failed to find).
+
+   I haven't given a lot of thought to configurable font-sizes at present.
+
+   I hope I have been reasonably consistent with name conventions -- I have to
+   admit I'm struggling rather.
+
+   A Jamieson   STEPBible   Oct 2026
+*/
+/******************************************************************************/
+
+/******************************************************************************/
+/* Things I believe to be 'standard' settings. */
+
+:root { color-scheme: light dark; }          /* required for light-dark() to work */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+:root
+{
+    /* Primary (blue) light to dark.  Dark mode runs the other way. */
+    --clrPrimary0: light-dark(#DBE6E9, #0B1A20);
+    --clrPrimary1: light-dark(#B6CCD3, #164D5D);
+    --clrPrimary2: light-dark(#80A6B1, #306777);
+    --clrPrimary3: light-dark(#498090, #498090);
+    --clrPrimary4: light-dark(#306777, #80A6B1);
+    --clrPrimary5: light-dark(#164D5D, #B6CCD3);
+    --clrPrimary6: light-dark(#000111, #DBE6E9);
+
+    /* Secondary (grey) */
+    --clrSecondary0: light-dark(#FFFFFF, #141414);
+    --clrSecondary1: light-dark(#EBEBEB, #292929);
+    --clrSecondary2: light-dark(#C1C1C1, #5C5C5C);
+    --clrSecondary3: light-dark(#757575, #8A8A8A);
+    --clrSecondary4: light-dark(#5C5C5C, #C1C1C1);
+    --clrSecondary5: light-dark(#292929, #EBEBEB);
+    --clrSecondary6: light-dark(#0F0F0F, #F7F7F7);
+
+    /* Accents */
+    --clrAccentBlue0: light-dark(#99C8FF, #000F99);
+    --clrAccentBlue1: light-dark(#4D9EFF, #0042CC);
+    --clrAccentBlue2: light-dark(#0075FF, #0075FF);
+    --clrAccentBlue3: light-dark(#0042CC, #4D9EFF);
+    --clrAccentBlue4: light-dark(#000F99, #99C8FF);
+
+    --clrAccentRed0: light-dark(#E9BDAF, #7C0D00);
+    --clrAccentRed1: light-dark(#D98B73, #AE401E);
+    --clrAccentRed2: light-dark(#C85937, #C85937);
+    --clrAccentRed3: light-dark(#AE401E, #D98B73);
+    --clrAccentRed4: light-dark(#7C0D00, #E9BDAF);
+
+    --clrAccentCream0: light-dark(#FFFFF6, #1E1E14);
+    --clrAccentCream1: light-dark(#FFFFE9, #2B2B1D);
+    --clrAccentCream2: light-dark(#FFFFE0, #3A3A26);
+    --clrAccentCream3: light-dark(#E5E5C6, #66664A);
+    --clrAccentCream4: light-dark(#99997A, #CCCCA3);
+
+    --clrAccentGreen0: light-dark(#B2D9B2, #004D00);
+    --clrAccentGreen1: light-dark(#66B366, #006700);
+    --clrAccentGreen2: light-dark(#008000, #2E9A2E);
+    --clrAccentGreen3: light-dark(#006700, #66B366);
+    --clrAccentGreen4: light-dark(#004D00, #B2D9B2);
+
+    --clrHighlight:      light-dark(#17758F, #5FB3CC);
+    --clrHighlightBg:    light-dark(#17758F, #17758F);
+    --clrStrongText:     light-dark(#447888, #80A6B1);
+    --clrLexiconFocusBG: light-dark(#c8d8dc, #164D5D);
+    --clrRelatedWordBg:  light-dark(#b2e5f3, #1F5F73);
+    --clrBackground:     light-dark(#ffffff, #141414);
+    --clrText:           light-dark(#5d5d5d, #EBEBEB);
+    --clr2ndHover:       light-dark(#d3d3d3, #5C5C5C);
+
+    --simulated-sidebar-width: 100%;
+
+    --defaultFontSize: medium;
+
+    --minimumSizeOfBigScreens: 960;
+}
+    
+
+
+/******************************************************************************/
+:root
+{
+    --j-standard-font-size: var(--defaultStandardFontSize);
+    --clr-j-standard-background: var(--clrBackground);
+    --clr-j-link-background: var(--clr-j-standard-background);
+    --clr-j-link-foreground: var(--clrText);
+    --clr-j-hover-background: var(--clrAccentCream2);
+    --clr-j-hover-foreground: var(--clrText);
+    --clr-j-active-background: var(--clrAccentRed0);
+    --clr-j-active-foreground: var(--clrText);
+    --clr-j-focus-visible-outline: red;
+    --clr-j-common-link-foreground: blue;
+    --clr-j-common-link-highlight-background: var(--clrRelatedWordBg);
+    --clr-j-common-link-highlight-foreground: var(--clr-j-common-link);
+    --clr-j-popup-simple-fading: var(--clrHighlightBg);
+
+    font-family: Georgia, serif;
+    font-size: var(--defaultFontSize) !important;
+}
+
+
+/******************************************************************************/
+/* A brief welcome message when the application first opens. */
+
+.j-welcome-popup {
+    --clr-j-popup-simple-fading: var(--clrAccentRed4);
+    font-family: sans-serif;
+}
+
+
+
+/******************************************************************************/
+/* General. */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+        
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-size: var(--j-standard-font-size);
+    background: var(--clr-j-standard-background);
+}
+
+
+
+/******************************************************************************/
+.j-common-button {
+    background: white;
+    color: var(--clr-j-common-link-foreground);
+    cursor: pointer;
+    border: 2px solid gray;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.j-common-button:hover {
+    text-decoration-thickness: 2px;
+    background: var(--clr-j-hover-background);
+    color: var(--clr-j-hover-foreground) !important;
+}
+
+.j-common-button:focus-visible {
+    outline: 3px solid var(--clr-j-focus-visible-outline);
+    outline-offset: 2px;
+}
+
+a, .j-common-link-button {
+    background: none;
+    border: none;
+    color: var(--clr-j-common-link-foreground);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover, .j-common-link-button:hover {
+    text-decoration-thickness: 2px;
+    background: var(--clr-j-common-link-highlight-background);
+    color: var(--clr-j-common-link-highlight-foreground) !important;
+}
+
+a:focus-visible, .j-common-link-button:focus-visible {
+    outline: 3px solid var(--clr-j-focus-visible-outline);
+    outline-offset: 2px;
+}
+
+
+/******************************************************************************/
+/* These definitions are for things which go in the info-box at the top right
+   of a typical application.  Where we have, say, an info-box for Jerusalem,
+   chances are it will include the name 'Jerusalem', along with perhaps
+   several synonyms.  We are likely to have enough information to render
+   these as genuine links, and at one time I'd been asked to do just that,
+   so that clicking on them would effectively re-draw the current content.
+
+   Since then I've been asked not to render them as links after all.  The
+   definitions below cater for either.  If you want them as links, use
+   a.j-link-for-current-item, otherwise .j-self-link-as-non-link. */
+
+a.j-link-for-current-item {
+    color: var(--clr-j-common-link-foreground);
+}
+
+.j-self-link-as-non-link {
+    font-weight: bold;
+}
+
+.j-link-without-decoration {
+    color: var(--clr-j-common-link-foreground);
+    text-decoration: none;
+}
+
+
+/******************************************************************************/
+/* <ul> indented slightly, no bullet point, extra spacing. */
+
+ul.j-common-ul-no-bullet {
+    list-style: none;
+    padding-left: 20px;
+    margin: 0;
+}
+
+ul.j-common-ul-no-bullet li:first-child {
+    margin-top: 15px;
+}
+
+ul.j-common-ul-no-bullet li + li {
+    margin-top: 10px;
+}
+
+
+/******************************************************************************/
+/* Standard text format. */
+
+.j-common-standard-text {
+    font-family: Georgia, serif;
+    font-size: var(--defaultFontSize) !important;
+}

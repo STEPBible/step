@@ -736,9 +736,10 @@ step.util = {
 			activePassage.save({ targetLocation: verseRef }, { silent: true });
 		}
 
-        var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
+        var firstVerse = $.trim(verseRef).split(/\s+/)[0]; // multi-verse refs are a space-separated list
+        var chapterRef = firstVerse.substr(0, firstVerse.lastIndexOf("."));
         if (step.util.isBlank(chapterRef)) {
-            chapterRef = verseRef;
+            chapterRef = firstVerse;
         }
 		if (chapterRef.substr(chapterRef.indexOf(".")+1) === "1") { // if chapter number is 1
 			var bookName = chapterRef.substr(0, chapterRef.indexOf("."));

@@ -67,15 +67,14 @@ public class SearchPageController extends HttpServlet {
             //clear the lang cookie
             final Cookie[] cookies = request.getCookies();
             if(cookies != null) {
-            for(Cookie c  : cookies) {
-                if("lang".equals(c.getName())) {
-                    c.setMaxAge(0);
-                    response.addCookie(c);
+                for(Cookie c  : cookies) {
+                    if("lang".equals(c.getName())) {
+                        c.setMaxAge(0);
+                        response.addCookie(c);
+                    }
                 }
             }
             doRedirect(response);
-                return;
-            }
             return;
         }
 

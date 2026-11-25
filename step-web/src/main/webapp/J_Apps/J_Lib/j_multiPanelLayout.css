@@ -1,0 +1,302 @@
+/******************************************************************************/
+/* Support for a multi-panel layout, possibly with an arrow permitting one of
+   the panels to be resized by the user.
+
+   Overriding much of this may be asking for trouble, but there may be a few
+   things which you can usefully tweak -- look out for 'CONFIGURATION HINT'
+   below.  Overrides should probably go into your HTML file.
+
+   A Jamieson Oct 2026
+*/
+
+/******************************************************************************/
+@import url("./j_common.css");
+
+
+/******************************************************************************/
+/* Describes the overall layout of the panels.
+
+   CONFIGURATION HINT:
+
+   - To change the relative widths of the columns, change the width variable
+     below.
+
+   - To change the relative heights of the two panels which make up a column,
+     change the height setting.
+
+   - We make provision here for the upper panel in a column to change height
+     dynamically, and for the lower panel to take up the slack (for example
+     to hold the standard search box functionality, where the table of
+     options may change size).  To limit the total amount of space allocated
+     to this top panel, change the max-height setting as necessary.  Where
+     such resizing is supported, the height setting is probably
+     meaningless. */
+
+:root {
+    --j-multi-panel-layout-left-column-width: 50%;
+    
+    --j-multi-panel-layout-top-left-panel-height: 50%;
+    --j-multi-panel-layout-top-left-panel-max-height: var(--j-multi-panel-layout-top-left-panel-height);
+    
+    --j-multi-panel-layout-top-right-panel-height: 50%;
+    --j-multi-panel-layout-top-right-panel-max-height: var(--j-multi-panel-layout-top-right-panel-height);
+}
+
+
+j-4panel-layout {
+    display: contents;
+}
+
+
+/******************************************************************************/
+/* Defines the fact that we have two columns, and describes them. */
+
+.j-multi-panel-layout-overall-layout {
+    display: grid;
+
+    /* Two main columns */
+    grid-template-columns:
+        var(--j-multi-panel-layout-left-column-width)
+        calc(100% - var(--j-multi-panel-layout-left-column-width));
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+}
+
+
+/******************************************************************************/
+/* A vanilla-flavour column. */
+
+.j-multi-panel-layout-column {
+    display: grid;
+    min-width: 0;
+    min-height: 0;
+
+    /* Two panels, with the lower one taking the remainder */
+/*    grid-template-rows:
+        var(--top-height)
+        calc(100% - var(--top-height)); */
+}
+
+/******************************************************************************/
+/* Relative sizes of panels in each column. */
+
+.j-multi-panel-layout-left-column {
+    grid-template-rows: var(--j-multi-panel-layout-top-left-panel-height) calc(100% - var(--j-multi-panel-layout-top-left-panel-height));
+}
+
+.j-multi-panel-layout-right-column {
+    grid-template-rows: var(--j-multi-panel-layout-top-right-panel-height) calc(100% - var(--j-multi-panel-layout-top-right-panel-height));
+}
+
+
+/******************************************************************************/
+/* Extra features for a column where we want the lower panel to expand or
+   contract vertically to fill the space when teh top panel expands or
+   contracts.  Note that this is not a stand-alone definition: you should
+   always use it in conjuncton with j-multi-panel-layout-column. */
+
+.j-multi-panel-layout-left-column-auto-vertical-resizing {
+    grid-template-rows: auto minmax(0, 1fr) !important;
+}
+
+.j-multi-panel-layout-left-column-auto-vertical-resizing.resizing-active {
+    grid-template-rows: minmax(auto, var(--j-multi-panel-layout-top-left-panel-max-height)) minmax(0, 1fr) !important;
+}
+
+
+.j-multi-panel-layout-right-column-auto-vertical-resizing {
+    grid-template-rows: auto minmax(0, 1fr) !important;
+}
+
+.j-multi-panel-layout-right-column-auto-vertical-resizing.resizing-active {
+    grid-template-rows: minmax(auto, var(--j-multi-panel-layout-top-right-panel-max-height)) minmax(0, 1fr) !important;
+}
+
+
+/******************************************************************************/
+/* An individual panel. */
+
+.j-multi-panel-layout-panel {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    font-family: sans-serif;
+    font-size: 2rem;
+    background: white;
+
+    position: relative; /* Supports a draggable arrow to resize a panel -- see below. */
+}
+
+
+/******************************************************************************/
+/* Add this to something already marked j-multi-panel-layout-panel if you want
+   there to be a little blank space around the contents of the panel. */
+
+.j-multi-panel-layout-panel-indented {
+    margin: 5px;
+}
+
+
+/******************************************************************************/
+/* How iframes are shown in the panel. */
+
+.j-multi-panel-layout-panel iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+
+
+
+
+/******************************************************************************/
+/* Resizing a panel.  See j_multiPanelLayout.js.
+
+   A resizable panel has two edges which can be dragged (the ones facing into
+   the page), and a handle at the corner where they meet.  For the bottom right
+   panel these are the top and left edges, and the handle is at the top left;
+   for the top left panel the bottom and right edges and a bottom right handle;
+   and so on.  The handles and edges are created by the code. */
+/******************************************************************************/
+
+/******************************************************************************/
+/* A panel which can be resized.  The code adds this class to it.
+
+   The z-index gives the panel a stacking context of its own, and that does two
+   things.  First, the handle and edges, which stick out a little beyond the
+   panel, are drawn over the neighbouring panels (which is why the z-index is
+   above their automatic one).  Second, and as important, they are drawn _only_
+   within this panel's own layer.  So when another resizable panel is enlarged
+   (the code gives it a much higher z-index) it covers this panel's handle along
+   with everything else, instead of the handle showing through on top. */
+
+.j-multi-panel-layout-resizable {
+    position: relative;
+    z-index: 1;
+}
+
+
+/******************************************************************************/
+/* The edges.  A strip a few pixels wide, straddling the edge of the panel,
+   which changes the cursor and can be dragged. */
+
+.j-multi-panel-layout-resize-edge {
+    position: absolute;
+    z-index: 999;           /* Just below the corner handles. */
+    touch-action: none;
+}
+
+.j-multi-panel-layout-resize-edge-left   { left:   -3px; top:  0; width: 6px; height: 100%; cursor: ew-resize; }
+.j-multi-panel-layout-resize-edge-right  { right:  -3px; top:  0; width: 6px; height: 100%; cursor: ew-resize; }
+.j-multi-panel-layout-resize-edge-top    { top:    -3px; left: 0; height: 6px; width: 100%; cursor: ns-resize; }
+.j-multi-panel-layout-resize-edge-bottom { bottom: -3px; left: 0; height: 6px; width: 100%; cursor: ns-resize; }
+
+
+/******************************************************************************/
+/* The resize handles, one for each corner. */
+
+.j-multi-panel-layout-resize-handle-top-left,
+.j-multi-panel-layout-resize-handle-top-right,
+.j-multi-panel-layout-resize-handle-bottom-left,
+.j-multi-panel-layout-resize-handle-bottom-right {
+    position: absolute;
+
+    width: 16px;
+    height: 16px;
+
+    background: red;
+
+    z-index: 1000;
+    touch-action: none;
+}
+
+
+/* Each is a corner bracket, made by clipping a square. */
+
+.j-multi-panel-layout-resize-handle-top-left {
+    left: -6px;
+    top: -6px;
+    clip-path: polygon(0 0, 100% 0, 100% 15%, 15% 100%, 0 100%);
+    cursor: nwse-resize;
+}
+
+.j-multi-panel-layout-resize-handle-top-right {
+    right: -6px;
+    top: -6px;
+    clip-path: polygon(100% 0, 0 0, 0 15%, 85% 100%, 100% 100%);
+    cursor: nesw-resize;
+}
+
+.j-multi-panel-layout-resize-handle-bottom-left {
+    left: -6px;
+    bottom: -6px;
+    clip-path: polygon(0 100%, 100% 100%, 100% 85%, 15% 0, 0 0);
+    cursor: nesw-resize;
+}
+
+.j-multi-panel-layout-resize-handle-bottom-right {
+    right: -6px;
+    bottom: -6px;
+    clip-path: polygon(100% 100%, 0 100%, 0 85%, 85% 0, 100% 0);
+    cursor: nwse-resize;
+}
+
+
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+/* Narrow layout (small screens), as created by j_responsiveLayout.js.  The
+   panels are moved into a tabbed dialog, one per tab. */
+/******************************************************************************/
+/******************************************************************************/
+
+/* The hidden attribute would otherwise lose to the display settings on the
+   layouts themselves. */
+
+.j-multi-panel-layout-overall-layout[hidden],
+.j-multi-panel-layout-narrow-layout[hidden] {
+    display: none;
+}
+
+
+.j-multi-panel-layout-narrow-layout {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh; /* Accounts for mobile browsers' collapsing address bar, where supported. */
+    overflow: hidden;
+}
+
+
+/* A panel which has been slotted into a tab: it simply fills the tab.  (The
+   inline top border which some panels carry to separate them from the panel
+   above makes no sense when there is nothing above.) */
+
+.j-multi-panel-layout-narrow-layout > j-tabbed-dialog > .j-multi-panel-layout-panel {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    border-top: none !important;
+}
+
+
+/* Resizing makes no sense when a panel fills a tab. */
+
+html[data-j-layout="narrow"] .j-multi-panel-layout-resize-handle-top-left,
+html[data-j-layout="narrow"] .j-multi-panel-layout-resize-handle-top-right,
+html[data-j-layout="narrow"] .j-multi-panel-layout-resize-handle-bottom-left,
+html[data-j-layout="narrow"] .j-multi-panel-layout-resize-handle-bottom-right,
+html[data-j-layout="narrow"] .j-multi-panel-layout-resize-edge {
+    display: none;
+}
